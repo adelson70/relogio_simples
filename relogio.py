@@ -1,5 +1,4 @@
 # Bibliotecas
-
 import tkinter as tk
 from tkinter.font import Font
 from datetime import datetime
@@ -27,6 +26,9 @@ def ajustar_janela_ao_conteudo():
     # Define a geometria da janela
     root.geometry(f"{largura+20}x{altura}+{x_pos-50}+{y_pos-120}")
 
+# Mensagem de erro caso falte internet
+msg_erro = ('Erro ao consultar o horário de Brasília', 'Verifique sua Internet!')
+
 # Função que ira obter o horario completo de brasilia
 # Com data e tudo
 def obter_horario_brasilia():
@@ -41,8 +43,7 @@ def obter_horario_brasilia():
         return objeto_datetime
     
     except:
-        msg_erro = ('Erro ao consultar o horário de Brasília', 'Verifique sua Internet!')
-        return msg_erro
+        return
 
 # Ira buscar no retorno da função obter_horario_brasilia
 # Apenas as horas, minutos e segundos
@@ -60,7 +61,7 @@ def buscar_horario():
     
     # Caso de errado é sinal de que esta sem internet
     except:
-        return obter_horario_brasilia()[1]
+        return msg_erro[1]
 
 # Assim como na função a cima, mas ira retornar a data
 def buscar_data():
@@ -99,7 +100,7 @@ def buscar_data():
     
     # Retorno da msg de erro
     except:
-        return obter_horario_brasilia()[0]
+        return msg_erro[0]
 
 # Função que ira atualizar a label a cada 1 segundo
 def atualizar_label():
