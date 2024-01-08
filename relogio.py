@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter.font import Font
 from datetime import datetime
 import requests
-from tkinter import messagebox
 import time
 
 # Função para ajustar a janela principal conforme o conteudo que estiver nela
