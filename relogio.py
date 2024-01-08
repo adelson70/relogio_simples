@@ -132,7 +132,6 @@ janela.title('Horário de Brasília')
 fonte_data = Font(size=16, weight="bold")
 fonte_horario = Font(size=24, weight="bold")
 
-
 # Label da data
 label_data = tk.Label(janela, text='', font=fonte_data)
 label_data.pack(pady=5)
