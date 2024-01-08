@@ -27,6 +27,8 @@ def ajustar_janela_ao_conteudo():
     # Define a geometria da janela
     root.geometry(f"{largura+20}x{altura}+{x_pos-50}+{y_pos-120}")
 
+# Função que ira obter o horario completo de brasilia
+# Com data e tudo
 def obter_horario_brasilia():
     try:
         # Especifica o fuso horário para Brasília
@@ -42,6 +44,8 @@ def obter_horario_brasilia():
         msg_erro = ('Erro ao consultar o horário de Brasília, Verifique sua Internet!')
         return msg_erro
 
+# Ira buscar no retorno da função obter_horario_brasilia
+# Apenas as horas, minutos e segundos
 def buscar_horario():
     try:
         horario_completo = obter_horario_brasilia()
@@ -54,9 +58,11 @@ def buscar_horario():
 
         return horario
     
+    # Caso de errado é sinal de que esta sem internet
     except:
         return obter_horario_brasilia()
 
+# Assim como na função a cima, mas ira retornar a data
 def buscar_data():
     try:
         horario_completo = obter_horario_brasilia()
@@ -76,8 +82,8 @@ def buscar_data():
         '12': 'Dezembro'
     }
         dia_semana_list = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo']
-        dia_semana_numero = horario_completo.weekday()
-        dia_semana_escrito = dia_semana_list[dia_semana_numero]
+        dia_semana_numero = horario_completo.weekday() # retorna um indice
+        dia_semana_escrito = dia_semana_list[dia_semana_numero] # busca pelo indice da lista onde contem os dias da semana
 
         dia = str(horario_completo.day)
         
@@ -86,14 +92,16 @@ def buscar_data():
         
         ano = str(horario_completo.year)
 
-        # Formatação final
+        # Formatação final que ira aparecer na label
         data = f'{dia_semana_escrito}, {dia} de {mes_escrito} de {ano}'
 
         return data
     
+    # Retorno vazio caso não tenha internet
     except:
         return 
 
+# Função que ira atualizar a label a cada 1 segundo
 def atualizar_label():
     global label_horario
     global label_data
@@ -130,6 +138,7 @@ label_data.pack(pady=5)
 label_horario = tk.Label(janela, text='', font=fonte_horario)
 label_horario.pack(pady=5)
 
+# Chama as funções de atualização de label e de tamanho da janela
 atualizar_label()
 ajustar_janela_ao_conteudo()
 
