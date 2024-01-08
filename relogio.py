@@ -106,18 +106,21 @@ def atualizar_label():
     global label_horario
     global label_data
 
+    try:
+        label_horario.config(text=buscar_horario())
+        label_data.config(text=buscar_data())
 
-    label_horario.config(text=buscar_horario())
-    label_data.config(text=buscar_data())
+        # Para que não fique pulando e ocasione Delay
+        # Calcula o tempo restante até o próximo segundo
+        milissegundos_restantes = 1000 - int(time.time() * 1000) % 1000
 
-    # Para que não fique pulando e ocasione Delay
-    # Calcula o tempo restante até o próximo segundo
-    milissegundos_restantes = 1000 - int(time.time() * 1000) % 1000
-
-    # Agenda a próxima atualização após o tempo restante
-    janela.after(milissegundos_restantes, atualizar_label)
-    janela.after(900, ajustar_janela_ao_conteudo)
-    print(buscar_horario())
+        # Agenda a próxima atualização após o tempo restante
+        janela.after(milissegundos_restantes, atualizar_label)
+        janela.after(900, ajustar_janela_ao_conteudo)
+        
+    except:
+        janela.after(900, atualizar_label)
+        janela.after(900, ajustar_janela_ao_conteudo)
 
 # Janela Principal do Relógio
 janela = tk.Tk()
