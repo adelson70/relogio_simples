@@ -40,12 +40,46 @@ def obter_horario_brasilia():
 def buscar_horario():
     horario_completo = obter_horario_brasilia()
 
+    hora = horario_completo.hour
+    minutos = horario_completo.minute
+    segundos = horario_completo.second
+
+    horario = f'{hora}:{minutos}:{segundos}'
+
+    return horario
+
 def buscar_data():
     horario_completo = obter_horario_brasilia()
 
+    meses_dict = {
+    '1': 'Janeiro',
+    '2': 'Fevereiro',
+    '3': 'Março',
+    '4': 'Abril',
+    '5': 'Maio',
+    '6': 'Junho',
+    '7': 'Julho',
+    '8': 'Agosto',
+    '9': 'Setembro',
+    '10': 'Outubro',
+    '11': 'Novembro',
+    '12': 'Dezembro'
+}
+    dia_semana_list = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo']
+    dia_semana_numero = horario_completo.weekday()
+    dia_semana_escrito = dia_semana_list[dia_semana_numero]
+
     dia = str(horario_completo.day)
-    mes = str(horario_completo.month)
+    
+    mes_numero = str(horario_completo.month)
+    mes_escrito = meses_dict[mes_numero]
+    
     ano = str(horario_completo.year)
+
+    # Formatação final
+    data = f'{dia_semana_escrito}, {dia} de {mes_escrito} de {ano}'
+
+    return data
 
 
 # Janela Principal do Relógio
