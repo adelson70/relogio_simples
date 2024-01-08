@@ -5,9 +5,13 @@ from tkinter.font import Font
 from datetime import datetime
 import requests
 from tkinter import messagebox
+import time
 
 # Função para ajustar a janela principal conforme o conteudo que estiver nela
-def ajustar_janela_ao_conteudo(root):
+def ajustar_janela_ao_conteudo():
+    global janela
+    root = janela
+
     root.update_idletasks()  # Atualiza a geometria da janela
     largura = root.winfo_reqwidth()  # Largura requisitada pelo conteúdo
     altura = root.winfo_reqheight()  # Altura requisitada pelo conteúdo
@@ -21,7 +25,7 @@ def ajustar_janela_ao_conteudo(root):
     y_pos = (altura_tela - altura) // 2
 
     # Define a geometria da janela
-    root.geometry(f"{largura+200}x{altura}+{x_pos-50}+{y_pos-120}")
+    root.geometry(f"{largura+20}x{altura}+{x_pos-50}+{y_pos-120}")
 
 def obter_horario_brasilia():
     try:
@@ -35,58 +39,98 @@ def obter_horario_brasilia():
         return objeto_datetime
     
     except:
-        return messagebox.showerror('Erro','Erro ao consultar o horário de Brasília, Verifique sua Internet!')
+        msg_erro = ('Erro ao consultar o horário de Brasília, Verifique sua Internet!')
+        return msg_erro
 
 def buscar_horario():
-    horario_completo = obter_horario_brasilia()
+    try:
+        horario_completo = obter_horario_brasilia()
 
-    hora = horario_completo.hour
-    minutos = horario_completo.minute
-    segundos = horario_completo.second
+        hora = horario_completo.hour
+        minutos = f'{horario_completo.minute:02d}'
+        segundos = f'{horario_completo.second:02d}'
 
-    horario = f'{hora}:{minutos}:{segundos}'
+        horario = f'{hora}:{minutos}:{segundos}'
 
-    return horario
+        return horario
+    
+    except:
+        return obter_horario_brasilia()
 
 def buscar_data():
-    horario_completo = obter_horario_brasilia()
+    try:
+        horario_completo = obter_horario_brasilia()
 
-    meses_dict = {
-    '1': 'Janeiro',
-    '2': 'Fevereiro',
-    '3': 'Março',
-    '4': 'Abril',
-    '5': 'Maio',
-    '6': 'Junho',
-    '7': 'Julho',
-    '8': 'Agosto',
-    '9': 'Setembro',
-    '10': 'Outubro',
-    '11': 'Novembro',
-    '12': 'Dezembro'
-}
-    dia_semana_list = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo']
-    dia_semana_numero = horario_completo.weekday()
-    dia_semana_escrito = dia_semana_list[dia_semana_numero]
+        meses_dict = {
+        '1': 'Janeiro',
+        '2': 'Fevereiro',
+        '3': 'Março',
+        '4': 'Abril',
+        '5': 'Maio',
+        '6': 'Junho',
+        '7': 'Julho',
+        '8': 'Agosto',
+        '9': 'Setembro',
+        '10': 'Outubro',
+        '11': 'Novembro',
+        '12': 'Dezembro'
+    }
+        dia_semana_list = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo']
+        dia_semana_numero = horario_completo.weekday()
+        dia_semana_escrito = dia_semana_list[dia_semana_numero]
 
-    dia = str(horario_completo.day)
+        dia = str(horario_completo.day)
+        
+        mes_numero = str(horario_completo.month)
+        mes_escrito = meses_dict[mes_numero]
+        
+        ano = str(horario_completo.year)
+
+        # Formatação final
+        data = f'{dia_semana_escrito}, {dia} de {mes_escrito} de {ano}'
+
+        return data
     
-    mes_numero = str(horario_completo.month)
-    mes_escrito = meses_dict[mes_numero]
-    
-    ano = str(horario_completo.year)
+    except:
+        return 
 
-    # Formatação final
-    data = f'{dia_semana_escrito}, {dia} de {mes_escrito} de {ano}'
+def atualizar_label():
+    global label_horario
+    global label_data
 
-    return data
 
+    label_horario.config(text=buscar_horario())
+    label_data.config(text=buscar_data())
+
+    # Para que não fique pulando e ocasione Delay
+    # Calcula o tempo restante até o próximo segundo
+    milissegundos_restantes = 1000 - int(time.time() * 1000) % 1000
+
+    # Agenda a próxima atualização após o tempo restante
+    janela.after(milissegundos_restantes, atualizar_label)
+    janela.after(900, ajustar_janela_ao_conteudo)
+    print(buscar_horario())
 
 # Janela Principal do Relógio
 janela = tk.Tk()
 
 # Titulo da janela
-janela.title('Relógio Simples')
-ajustar_janela_ao_conteudo(janela)
+janela.title('Horário de Brasília')
+
+# Fontes personalizadas
+fonte_data = Font(size=16, weight="bold")
+fonte_horario = Font(size=24, weight="bold")
+
+
+# Label da data
+label_data = tk.Label(janela, text='', font=fonte_data)
+label_data.pack(pady=5)
+
+# Label do horario
+label_horario = tk.Label(janela, text='', font=fonte_horario)
+label_horario.pack(pady=5)
+
+atualizar_label()
+ajustar_janela_ao_conteudo()
 
 janela.mainloop()
