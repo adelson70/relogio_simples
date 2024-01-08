@@ -41,7 +41,7 @@ def obter_horario_brasilia():
         return objeto_datetime
     
     except:
-        msg_erro = ('Erro ao consultar o horário de Brasília, Verifique sua Internet!')
+        msg_erro = ('Erro ao consultar o horário de Brasília', 'Verifique sua Internet!')
         return msg_erro
 
 # Ira buscar no retorno da função obter_horario_brasilia
@@ -60,7 +60,7 @@ def buscar_horario():
     
     # Caso de errado é sinal de que esta sem internet
     except:
-        return obter_horario_brasilia()
+        return obter_horario_brasilia()[1]
 
 # Assim como na função a cima, mas ira retornar a data
 def buscar_data():
@@ -97,9 +97,9 @@ def buscar_data():
 
         return data
     
-    # Retorno vazio caso não tenha internet
+    # Retorno da msg de erro
     except:
-        return 
+        return obter_horario_brasilia()[0]
 
 # Função que ira atualizar a label a cada 1 segundo
 def atualizar_label():
